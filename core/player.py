@@ -100,9 +100,11 @@ class Player:
             self.hero.health -= fatigue_damage
             self.signals.on_fatigue.emit(FatigueEventData(source=self, damage=fatigue_damage))
             return
-            
+
+        card = self._deck.draw_card()
         if not self.hand_is_full():
-            self._hand.append(self._deck.draw_card())
+            self._hand.append(card)
+        
 
     def draw_cards(self, number):
         if not isinstance(number, int) or number < 0:
