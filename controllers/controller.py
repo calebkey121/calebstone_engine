@@ -1,16 +1,5 @@
 from abc import ABC, abstractmethod
 import random
-"""
-Purpose:
-    The controller takes in input from the player or AI and passes that information to the GameManager to process it. This class could also handle AI logic or reinforcement learning input depending on how the game is being played.
-Responsibilities:
-    Capture player input: Whether from A human or AI, the controller gathers actions (e.g., “play card X,” “attack with ally Y”).
-    Pass actions to the GameManager for resolution.
-    Can be extended to handle input from different sources (human player, AI agent, or RL agent).
-Notes:
-    This class should be extensible so that it can handle different types of inputs (e.g., human input, AI input, or input from A reinforcement learning algorithm).
-    You can extend it later to handle multiple types of controllers (e.g., a human controller, an AI controller).
-"""
 
 class Controller(ABC):
     @abstractmethod
@@ -21,6 +10,18 @@ class RandomController(Controller):
     def get_action(self, game_state):
         possible_actions = game_state.possible_actions()
         return random.choice(possible_actions)
+
+class WebController(Controller):
+    def __init__(self):
+        self.pending_action = None
+
+    def get_action(self, game_state):
+        action = self.pending_action
+        self.pending_action = None  # Clear after use
+        return action
+    
+    def set_action(self, action):
+        self.pending_action = action
 
 class TerminalController(Controller):
     def get_action(self, game_state):

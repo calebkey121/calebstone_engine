@@ -3,10 +3,7 @@ from pprint import pprint
 import time
 
 def run_simulation(num_games: int = 1000):
-    logger = GameLogger(log_file="simulation_results.jsonl")
-    
-    for _ in range(num_games):
-        GameManager(logger=logger)  # Same logger for all games
+    logger = GameManager.run_simulation(num_games=num_games, log_file="simulation_results.jsonl")
     
     # Get statistics across all games
     stats = logger.get_summary_stats()
