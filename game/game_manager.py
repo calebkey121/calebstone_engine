@@ -13,10 +13,10 @@ class GameManager:
                  player2_controller: Optional[Controller] = None):
         
         self.game_state = GameState(
-            player1Hero="Caleb", 
-            player2Hero="Dio", 
-            player1Deck=create_deck(DeckType.TEST), 
-            player2Deck=create_deck(DeckType.TEST)
+            player1Hero="Ebon Mortem", 
+            player2Hero="Auctor Noctis", 
+            player1Deck=create_deck(DeckType.STANDARD), 
+            player2Deck=create_deck(DeckType.STANDARD)
         )
         self.player1_controller = player1_controller or RandomController()
         self.player2_controller = player2_controller or RandomController()
