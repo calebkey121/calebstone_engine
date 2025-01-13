@@ -2,15 +2,15 @@
 from .game_state import GameState, GameResult
 from .game_logic import GameLogic
 from game_engine.cards import create_deck, DeckType
-from game_engine.controllers import RandomController, Controller
+from game_engine.controllers import RandomController, HumanController, Controller
 from game_engine.output import NoOutputHandler
 from game_engine.tracking import GameLogger
 from typing import Optional
 
 class GameManager:
     def __init__(self, logger: Optional[GameLogger] = None, 
-                 player1_controller: Optional[Controller] = None,
-                 player2_controller: Optional[Controller] = None):
+                 player1_controller_type: Optional[str] = "random",
+                 player2_controller_type: Optional[str] = "random"):
         
         self.game_state = GameState(
             player1Hero="Ebon Mortem", 
@@ -18,8 +18,8 @@ class GameManager:
             player1Deck=create_deck(DeckType.STANDARD), 
             player2Deck=create_deck(DeckType.STANDARD)
         )
-        self.player1_controller = player1_controller or RandomController()
-        self.player2_controller = player2_controller or RandomController()
+        self.player1_controller = Controller.create_controller(player1_controller_type)
+        self.player2_controller = Controller.create_controller(player2_controller_type)
         self.output_handler = NoOutputHandler()
         self.logger = logger or GameLogger(log_file="game_logs.jsonl")
         
@@ -69,3 +69,6 @@ class GameManager:
             game = GameManager(logger=logger)
             game.run_game()
         return logger
+
+if __name__ == "__main__":
+    GameManager.run_simulation()

@@ -46,8 +46,10 @@ class GameLogic():
     def start_game(game_state):
         if game_state.total_turns != 0 or game_state.current_player or game_state.opponent_player:
             raise ValueError("Tried starting the game on non turn zero")
-
-        if random.choice([True, False]): # Coin Flip
+        
+        # commented to make player 1 always go first, consider making this an environment var for testing
+        # if random.choice([True, False]): # Coin Flip
+        if True:
             game_state.current_player = game_state.player1
             game_state.opponent_player = game_state.player2
         else:
