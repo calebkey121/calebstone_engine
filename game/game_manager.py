@@ -1,10 +1,10 @@
 
 from .game_state import GameState, GameResult
 from .game_logic import GameLogic
-from game_engine.cards import create_deck, DeckType
-from game_engine.controllers import RandomController, HumanController, Controller
-from game_engine.output import NoOutputHandler
-from game_engine.tracking import GameLogger
+from calebstone_engine.cards import create_deck, DeckType
+from calebstone_engine.controllers import RandomController, HumanController, Controller
+from calebstone_engine.output import NoOutputHandler
+from calebstone_engine.tracking import GameLogger
 from typing import Optional
 
 class GameManager:

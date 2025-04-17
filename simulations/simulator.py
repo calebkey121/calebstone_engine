@@ -1,4 +1,4 @@
-from game_engine.game import GameManager, GameLogger
+from calebstone_engine.game import GameManager, GameLogger
 from pprint import pprint
 import time
 

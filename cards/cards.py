@@ -1,5 +1,5 @@
-# from game_engine.Ally import Ally
-# from game_engine.Effects import *
+# from calebstone_engine.Ally import Ally
+# from calebstone_engine.Effects import *
 
 # # Central definition of all cards in the game
 # SIEGE_ENGINEER = Ally(
@@ -184,8 +184,8 @@
 # }
 
 # test
-from game_engine.core import Ally
-from game_engine.effects import *
+from calebstone_engine.core import Ally
+from calebstone_engine.effects import *
 
 # Modified existing cards with scaled up values
 SIEGE_ENGINEER = Ally(

@@ -1,6 +1,6 @@
-from game_engine.effects import *
+from calebstone_engine.effects import *
 from tests.TestFramework import *
-from game_engine.GameLogic import GameLogic
+from calebstone_engine.GameLogic import GameLogic
 
 class DrawEffectsTest(GameTestCase):
     def test_end_turn_draw_effect_with_fatigue(self):

@@ -1,4 +1,4 @@
-from game_engine.config import HERO_STARTING_HEALTH, HERO_MAX_HEALTH
+from calebstone_engine.config import HERO_STARTING_HEALTH, HERO_MAX_HEALTH
 from .character import Character
 
 class Hero:

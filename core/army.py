@@ -1,5 +1,5 @@
 from .character import Character  # Base class for Hero/Ally
-from game_engine.config import ARMY_MAX_SIZE
+from calebstone_engine.config import ARMY_MAX_SIZE
 
 class Army:
     def __init__(self, hero):
@@ -68,7 +68,7 @@ class Army:
         return character in self._army
 
 # reworking army to include all characters, remove below once satisfied with above
-# from game_engine.Ally import Ally
+# from calebstone_engine.Ally import Ally
 # from config.GameSettings import ARMY_MAX_SIZE
 
 # # The main way to organize allies in the game army

@@ -1,5 +1,5 @@
-from game_engine.cards import CARD_CATALOG
-from game_engine.core import Ally
+from calebstone_engine.cards import CARD_CATALOG
+from calebstone_engine.core import Ally
 from enum import Enum
 
 class DeckType(Enum):

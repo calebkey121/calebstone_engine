@@ -4,7 +4,7 @@ from .card import Card
 from .ally import Ally
 from .hero import Hero
 from .signal import *
-from game_engine.config import *
+from calebstone_engine.config import *
 from dataclasses import dataclass, field
 
 @dataclass
@@ -147,12 +147,12 @@ class Player:
 
 
 # Old Player, too much boilerplate, delete once happy with above
-# from game_engine.Army import Army
-# from game_engine.Deck import Deck
-# from game_engine.Card import Card
-# from game_engine.Ally import Ally
-# from game_engine.Hero import Hero
-# from game_engine.Signal import *
+# from calebstone_engine.Army import Army
+# from calebstone_engine.Deck import Deck
+# from calebstone_engine.Card import Card
+# from calebstone_engine.Ally import Ally
+# from calebstone_engine.Hero import Hero
+# from calebstone_engine.Signal import *
 # from config.GameSettings import *
 # from dataclasses import dataclass, field
 

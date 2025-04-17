@@ -1,5 +1,5 @@
 from tests.TestFramework import *
-from game_engine.effects import *
+from calebstone_engine.effects import *
 import os
 import importlib
 import inspect

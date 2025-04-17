@@ -1,6 +1,6 @@
 """
 Game-wide configuration constants.
-All game settings and constants are defined here and can be imported from game_engine.config
+All game settings and constants are defined here and can be imported from calebstone_engine.config
 """
 
 ### HERO SETTINGS ###

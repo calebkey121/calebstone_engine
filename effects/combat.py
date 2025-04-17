@@ -1,8 +1,8 @@
-from game_engine.effects import Effect
+from calebstone_engine.effects import Effect
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from game_engine.GameState import GameState
-    from game_engine.Ally import Ally
+    from calebstone_engine.GameState import GameState
+    from calebstone_engine.Ally import Ally
 
 class HealAllAlliesEffect(Effect):
     @property

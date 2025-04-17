@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Dict, Optional
-from game_engine.GameState import GameState
-from game_engine.GameLogic import GameLogic
-from game_engine.Ally import Ally
+from calebstone_engine.GameState import GameState
+from calebstone_engine.GameLogic import GameLogic
+from calebstone_engine.Ally import Ally
 from tests.TestFramework import GameTestCase
 
 @dataclass

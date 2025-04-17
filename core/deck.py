@@ -1,6 +1,6 @@
 from typing import List
 import random
-from game_engine.config import DECK_STARTING_NUM_CARDS
+from calebstone_engine.config import DECK_STARTING_NUM_CARDS
 
 class Deck:
     def __init__(self, deck_list: List):

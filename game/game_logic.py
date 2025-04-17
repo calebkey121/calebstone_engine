@@ -1,6 +1,6 @@
 import random
-from game_engine.config import *
-from game_engine.effects import TimingWindow
+from calebstone_engine.config import *
+from calebstone_engine.effects import TimingWindow
 
 
 class GameLogic():

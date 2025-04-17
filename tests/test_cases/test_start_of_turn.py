@@ -1,7 +1,7 @@
-from game_engine.effects import *
+from calebstone_engine.effects import *
 from tests.TestFramework import GameTestCase
 from tests.TestScenario import *
-from game_engine.Ally import Ally
+from calebstone_engine.Ally import Ally
 
 class SOT_Test(GameTestCase):
     def test_start_of_turn(self):

@@ -1,7 +1,7 @@
 # test_framework.py
 from typing import Optional, List
-from game_engine.GameState import GameState
-from game_engine.Player import Player
+from calebstone_engine.GameState import GameState
+from calebstone_engine.Player import Player
 
 class GameTestCase:
     def setUp(self):

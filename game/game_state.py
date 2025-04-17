@@ -1,4 +1,4 @@
-from game_engine.core import Player
+from calebstone_engine.core import Player
 from .game_logic import GameLogic
 from enum import Enum, auto
 

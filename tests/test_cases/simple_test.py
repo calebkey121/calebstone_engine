@@ -1,7 +1,7 @@
-from game_engine.effects import *
+from calebstone_engine.effects import *
 from tests.TestFramework import GameTestCase
-from game_engine.GameLogic import GameLogic
-from game_engine.Ally import Ally
+from calebstone_engine.GameLogic import GameLogic
+from calebstone_engine.Ally import Ally
 
 class CombatTest(GameTestCase):
     def test_attack_scenarios(self):

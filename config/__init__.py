@@ -1,6 +1,6 @@
 """
 Configuration module for the game engine.
-Import all settings using: from game_engine.config import *
+Import all settings using: from calebstone_engine.config import *
 """
 
 from .game_settings import (
