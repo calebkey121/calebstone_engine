@@ -9,7 +9,7 @@ from typing import Optional
 
 class GameManager:
     def __init__(self, logger: Optional[GameLogger] = None, 
-                 player1_controller_type: Optional[str] = "random",
+                 player1_controller_type: Optional[str] = "human",
                  player2_controller_type: Optional[str] = "random"):
         
         self.game_state = GameState(
