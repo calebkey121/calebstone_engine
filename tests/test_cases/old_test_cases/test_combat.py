@@ -77,8 +77,8 @@ class CombatTest(GameTestCase):
         )
         
         # Set up game state
-        self.game_state.player1 = test_player1
-        self.game_state.player2 = test_player2
+        self.game_state.p1 = test_player1
+        self.game_state.p2 = test_player2
         self.game_state.current_player, self.game_state.opponent_player = test_player1, test_player2
         
         # 1. Attack enemy hero

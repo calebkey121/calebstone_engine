@@ -1,7 +1,9 @@
-from .output_handler import OutputHandler, NoOutputHandler, TerminalOutputHandler
+from .output_handler import OutputHandler, NoOutputHandler, TerminalOutputHandler, ActionHistoryFileHandler, JSONLGameLogHandler
 
 __all__ = [
     'OutputHandler',
     'NoOutputHandler',
-    'TerminalOutputHandler'
+    'TerminalOutputHandler',
+    'ActionHistoryFileHandler',
+    'JSONLGameLogHandler',
 ]

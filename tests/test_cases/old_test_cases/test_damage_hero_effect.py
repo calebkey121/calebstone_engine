@@ -32,8 +32,8 @@ class DamageEffectsTest(GameTestCase):
         )
         
         # Set up game state with test players
-        self.game_state.player1 = test_player1
-        self.game_state.player2 = test_player2
+        self.game_state.p1 = test_player1
+        self.game_state.p2 = test_player2
         self.game_state.current_player, self.game_state.opponent_player = test_player1, test_player2
         
         # Play the card
@@ -43,7 +43,7 @@ class DamageEffectsTest(GameTestCase):
         })
         
         # Kill the test ally
-        test_ally_on_board = self.game_state.player1._army.get_army()[0]
+        test_ally_on_board = self.game_state.p1._army.get_army()[0]
         test_ally_on_board.health = 0
         
         # Set expected end states

@@ -60,8 +60,8 @@ def run_scenario(test_case: GameTestCase,
     )
     
     # Set up game state
-    test_case.game_state.player1 = test_player1
-    test_case.game_state.player2 = test_player2
+    test_case.game_state.p1 = test_player1
+    test_case.game_state.p2 = test_player2
     test_case.game_state.current_player = test_player1
     test_case.game_state.opponent_player = test_player2
     test_case.game_state.total_turns = 1
@@ -83,14 +83,14 @@ def run_scenario(test_case: GameTestCase,
     # Verify final states using existing assert method
     if player1.expected_final_state:
         test_case.assert_player_state(
-            test_case.game_state.player1,
+            test_case.game_state.p1,
             player1.expected_final_state,
             f"{message} - Player 1 state mismatch"
         )
     
     if player2.expected_final_state:
         test_case.assert_player_state(
-            test_case.game_state.player2,
+            test_case.game_state.p2,
             player2.expected_final_state,
             f"{message} - Player 2 state mismatch"
         )

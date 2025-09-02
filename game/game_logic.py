@@ -40,24 +40,24 @@ class GameLogic():
     @staticmethod
     def is_game_over(game_state):
         # Check if either player's health has reached 0
-        return game_state.player1.is_dead() or game_state.player2.is_dead()
+        return game_state.p1.is_dead() or game_state.p2.is_dead()
 
     @staticmethod
-    def start_game(game_state):
+    def start_game(game_state): # maybe return false / true instead of erroring?
         if game_state.total_turns != 0 or game_state.current_player or game_state.opponent_player:
-            raise ValueError("Tried starting the game on non turn zero")
+            return False # raise ValueError("Tried starting the game on non turn zero")
         
         # commented to make player 1 always go first, consider making this an environment var for testing
-        # if random.choice([True, False]): # Coin Flip
-        if True:
-            game_state.current_player = game_state.player1
-            game_state.opponent_player = game_state.player2
+        if random.choice([True, False]): # Coin Flip
+
+            game_state.current_player = game_state.p1
+            game_state.opponent_player = game_state.p2
         else:
-            game_state.current_player = game_state.player2
-            game_state.opponent_player = game_state.player1
+            game_state.current_player = game_state.p2
+            game_state.opponent_player = game_state.p1
         
         first_player = game_state.current_player
-        game_state.who_went_first = first_player # useful info
+        game_state.who_went_first = first_player
         second_player = game_state.opponent_player
         
         # Give each player starting gold/income
@@ -71,6 +71,7 @@ class GameLogic():
         second_player.draw_cards(GAME_START['SECOND_PLAYER']['CARDS_DRAWN'])
 
         game_state.total_turns += 1
+        return True
     
     @staticmethod
     def end_turn(game_state):

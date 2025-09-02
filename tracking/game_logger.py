@@ -67,8 +67,8 @@ class PlayerStats:
 class GameLogger:
     def __init__(self, log_file: str = "game_logs.jsonl"):
         self.game_stats = GameStats()
-        self.player1_stats = PlayerStats()
-        self.player2_stats = PlayerStats()
+        self.p1_stats = PlayerStats()
+        self.p2_stats = PlayerStats()
         self.current_first_player = None
 
     def start_game(self, game_state) -> None:
@@ -76,16 +76,16 @@ class GameLogger:
         self.current_first_player = game_state.who_went_first
         
         # Track who went first
-        if self.current_first_player == game_state.player1:
-            self.player1_stats.games_first += 1
+        if self.current_first_player == game_state.p1:
+            self.p1_stats.games_first += 1
         else:
-            self.player2_stats.games_first += 1
+            self.p2_stats.games_first += 1
             
         self.game_stats.total_games += 1
 
     def end_game(self, game_state) -> None:
         """Record game end data"""
-        if game_state.player1.is_dead() and game_state.player2.is_dead():
+        if game_state.p1.is_dead() and game_state.p2.is_dead():
             return  # No stats recorded for ties
         
         # Record turn and round counts
@@ -93,8 +93,8 @@ class GameLogger:
         self.game_stats.total_rounds += game_state.current_round
         
         # Determine winner and record stats
-        winner = game_state.player2 if game_state.player1.is_dead() else game_state.player1
-        winner_stats = self.player1_stats if winner == game_state.player1 else self.player2_stats
+        winner = game_state.p2 if game_state.p1.is_dead() else game_state.p1
+        winner_stats = self.p1_stats if winner == game_state.p1 else self.p2_stats
         
         winner_stats.games_won += 1
         winner_stats.total_winning_health += winner.hero.health
@@ -112,7 +112,7 @@ class GameLogger:
         return {
             "game_stats": self.game_stats.get_stats(),
             "player_stats": {
-                "player1": self.player1_stats.get_stats(self.game_stats.total_games),
-                "player2": self.player2_stats.get_stats(self.game_stats.total_games)
+                "p1": self.p1_stats.get_stats(self.game_stats.total_games),
+                "p2": self.p2_stats.get_stats(self.game_stats.total_games)
             }
         }

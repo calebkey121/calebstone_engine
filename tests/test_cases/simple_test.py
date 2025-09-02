@@ -31,8 +31,8 @@ class CombatTest(GameTestCase):
         )
         
         # Set up game state
-        self.game_state.player1 = test_player1
-        self.game_state.player2 = test_player2
+        self.game_state.p1 = test_player1
+        self.game_state.p2 = test_player2
         self.game_state.current_player = test_player1
         self.game_state.opponent_player = test_player2
         
@@ -49,7 +49,7 @@ class CombatTest(GameTestCase):
         
         # Assert final state for player 1
         self.assert_player_state(
-            self.game_state.player1,
+            self.game_state.p1,
             {
                 'gold': 10,
                 'board': [
@@ -63,7 +63,7 @@ class CombatTest(GameTestCase):
         
         # Assert final state for player 2
         self.assert_player_state(
-            self.game_state.player2,
+            self.game_state.p2,
             {
                 'hero_health': 195,
                 'gold': 10,

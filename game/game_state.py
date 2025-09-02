@@ -5,22 +5,22 @@ from enum import Enum, auto
 class GameResult(Enum):
     IN_PROGRESS = auto()
     TIE = auto()
-    PLAYER1_WIN = auto()
-    PLAYER2_WIN = auto()
+    P1_WIN = auto()
+    P2_WIN = auto()
 
 class GameState:
-    def __init__(self, player1Hero, player1Deck, player2Hero, player2Deck):
+    def __init__(self, p1_hero, p1_deck, p2_hero, p2_deck):
         # Create both players with all subscriber types
-        self.player1 = Player(
-            player_name="player1",
-            hero_name=player1Hero,
-            deck_list=player1Deck,
+        self.p1 = Player(
+            player_name="p1",
+            hero_name=p1_hero,
+            deck_list=p1_deck,
         )
         
-        self.player2 = Player(
-            player_name="player2",
-            hero_name=player2Hero,
-            deck_list=player2Deck,
+        self.p2 = Player(
+            player_name="p2",
+            hero_name=p2_hero,
+            deck_list=p2_deck,
         )
 
         self.current_player = None
@@ -44,9 +44,6 @@ class GameState:
         else:
             self.is_first_turn_of_round = True
             self.current_round += 1
-    
-    def is_player1_turn(self):
-        return self.current_player is self.player1
     
     # Possible Actions
     def possible_cards_to_play(self):
@@ -81,23 +78,23 @@ class GameState:
                 "type": "end_turn"
             })
         return actions
-    # Possible Actions
+
 
     def get_result(self) -> GameResult:
         if not GameLogic.is_game_over(self):
             return GameResult.IN_PROGRESS
         
-        if self.player1.is_dead() and self.player2.is_dead():
+        if self.p1.is_dead() and self.p2.is_dead():
             return GameResult.TIE
-        elif self.player1.is_dead():
-            return GameResult.PLAYER2_WIN
+        elif self.p1.is_dead():
+            return GameResult.P2_WIN
         else:
-            return GameResult.PLAYER1_WIN
+            return GameResult.P1_WIN
 
     def to_vector(self):
         # Convert game state to vector (for ML or saving)
         return [
-            self.player1.health, len(self.player1.hand), len(self.player1.army), 
-            self.player2.health, len(self.player2.hand), len(self.player2.army),
+            self.p1.health, len(self.p1.hand), len(self.p1.army), 
+            self.p2.health, len(self.p2.hand), len(self.p2.army),
             self.round_count, self.total_turns
         ]
