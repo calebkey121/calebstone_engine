@@ -112,7 +112,7 @@ class GameLogic():
         TIMING_TO_SIGNAL = {
             TimingWindow.ON_DEATH: "on_death", # str must match attribute of ally
             TimingWindow.ON_ATTACK: "on_attack",
-            TimingWindow.ON_HEAL: "on_heal",
+            TimingWindow.ON_HEAL: "on_heal_received",
             TimingWindow.ON_DAMAGE_DEALT: "on_damage_dealt",
             # Add new timing windows here as needed
             # TimingWindow.NEW_TIMING: "signal_name",

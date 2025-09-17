@@ -1,4 +1,4 @@
-from calebstone_engine.game import GameManager, GameLogger, PlayerConfig
+from calebstone_engine.game import GameManager, PlayerConfig
 from pprint import pprint
 import time
 
@@ -10,9 +10,9 @@ def run_simulation(p1: PlayerConfig, p2: PlayerConfig, num_games = 1000):
     pprint(stats)
 
 def main():
-    p1 = PlayerConfig('random', 'Caleb', 'standard')
-    p2 = PlayerConfig('random', 'Dio', 'standard')
-    NUM_GAMES = 1
+    p1 = PlayerConfig('p1', 'random', 'Caleb', 'standard')
+    p2 = PlayerConfig('p2', 'random', 'Dio', 'standard')
+    NUM_GAMES = 1000
     print(f"Running simulation with {NUM_GAMES} games...")
     start_time = time.time()
     run_simulation(p1, p2, NUM_GAMES)

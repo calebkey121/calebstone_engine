@@ -47,7 +47,7 @@ class Character:
         self._ready = False
         
     def can_attack(self):
-        return self._ready and self._attack_value > 0
+        return self._ready and self._attack_value > 0 and self._health > 0
     
     def heal(self, source, amount):
         raw_heal = amount  # may buff in the future
