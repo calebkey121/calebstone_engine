@@ -7,18 +7,30 @@ from calebstone_engine.tracking.plotting import plot_rr_graphs
 
 N = 4
 players = [
-    PlayerConfig(player_id=f"Random 1", controller="random", hero="Caleb", deck="standard"),
-    PlayerConfig(player_id=f"Random 2", controller="random", hero="Caleb", deck="standard"),
-    PlayerConfig(player_id=f"Heuristic ChatGPT1", controller="heuristica", hero="Caleb", deck="standard"),
-    PlayerConfig(player_id=f"Heuristic ChatGPT2", controller="heuristica", hero="Caleb", deck="standard"),
-    PlayerConfig(player_id=f"Heuristic Mine1", controller="heuristicb", hero="Caleb", deck="standard"),
-    PlayerConfig(player_id=f"Heuristic Mine2", controller="heuristicb", hero="Caleb", deck="standard"),
+    PlayerConfig(player_id=f"Random", controller="random", hero="Caleb", deck="standard"),
+    PlayerConfig(player_id=f"Heuristic ChatGPT", controller="heuristica", hero="Caleb", deck="standard"),
+    #PlayerConfig(
+    #    player_id=f"Heuristic Best2",
+    #    controller="heuristicb:w_face=0.033,doom_face_mult=7.905,w_rm_enemy_atk=4.564,w_lose_own_atk=4.808,w_eff=1.221,w_overkill=8.365,survive_bonus=6.94",
+    #    hero="Caleb", deck="standard",
+    #),
+    PlayerConfig(
+        player_id=f"Heuristic Best1",
+        controller="heuristicb:w_face=0.017,doom_face_mult=3.953,w_rm_enemy_atk=2.282,w_lose_own_atk=2.404,w_eff=0.611,w_overkill=4.182,survive_bonus=3.47",
+        hero="Caleb", deck="standard",
+    ),
+    #PlayerConfig(
+    #    player_id=f"Heuristic Test",
+    #    controller="heuristicb:w_face=0.399,doom_face_mult=1.187,w_rm_enemy_atk=2.854,w_lose_own_atk=2.275,w_eff=0.015,w_overkill=6.751,survive_bonus=6.041",
+    #    hero="Caleb", deck="standard",
+    #),
+
 ]
 
 spec = RoundRobinSpec(
     experiment_id="rr-2025-09-16-a",
     players=players,
-    games_per_pair=200,
+    games_per_pair=1500,
     mirror_first_player=True,
     base_seed=12345,
     log_file="arena_rr_small.jsonl",
