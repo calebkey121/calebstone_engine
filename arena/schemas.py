@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import List, Optional
-from calebstone_engine.game.player_config import PlayerConfig
+from calebstone_engine.config.player_config import PlayerConfig
 
 @dataclass(frozen=True)
 class RoundRobinSpec:

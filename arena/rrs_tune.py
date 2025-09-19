@@ -4,7 +4,7 @@ from scipy.stats import uniform
 from math import sqrt
 from calebstone_engine.arena.arena_simulation import RoundRobinArena
 from calebstone_engine.arena.schemas import RoundRobinSpec
-from calebstone_engine.game.player_config import PlayerConfig
+from calebstone_engine.config.player_config import PlayerConfig
 from calebstone_engine.controllers.heuristic_controllers import HeuristicControllerB
 
 # ---- sampling space ----

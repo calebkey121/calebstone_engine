@@ -1,7 +1,7 @@
 # simulations/arena_rr_small.py
 from calebstone_engine.arena.arena_simulation import RoundRobinArena
 from calebstone_engine.arena.schemas import RoundRobinSpec
-from calebstone_engine.game.player_config import PlayerConfig
+from calebstone_engine.config.player_config import PlayerConfig
 from pprint import pprint
 from calebstone_engine.tracking.plotting import plot_rr_graphs
 
@@ -19,11 +19,11 @@ players = [
         controller="heuristicb:w_face=0.017,doom_face_mult=3.953,w_rm_enemy_atk=2.282,w_lose_own_atk=2.404,w_eff=0.611,w_overkill=4.182,survive_bonus=3.47",
         hero="Caleb", deck="standard",
     ),
-    #PlayerConfig(
-    #    player_id=f"Heuristic Test",
-    #    controller="heuristicb:w_face=0.399,doom_face_mult=1.187,w_rm_enemy_atk=2.854,w_lose_own_atk=2.275,w_eff=0.015,w_overkill=6.751,survive_bonus=6.041",
-    #    hero="Caleb", deck="standard",
-    #),
+    PlayerConfig(
+        player_id=f"CalebRL",
+        controller="rlinference",
+        hero="Caleb", deck="standard",
+    ),
 
 ]
 

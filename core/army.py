@@ -55,6 +55,9 @@ class Army:
     def get_character(self, index):
         return self._army[index]
     
+    def get_ally(self, index): # meh
+        return self._army[index + 1]
+    
     def available_attackers(self):
         """Returns indices of characters that can attack"""
         return [i for i, char in enumerate(self._army) 

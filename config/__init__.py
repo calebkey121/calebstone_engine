@@ -27,6 +27,8 @@ from .game_settings import (
     GAME_START,
 )
 
+from .player_config import PlayerConfig
+
 __all__ = [
     # Hero Settings
     'HERO_STARTING_HEALTH',
@@ -49,4 +51,6 @@ __all__ = [
     
     # Game Start Settings
     'GAME_START',
+
+    'PlayerConfig'
 ]

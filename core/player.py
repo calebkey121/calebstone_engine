@@ -113,6 +113,12 @@ class Player:
             self.draw_card()
 
     # Hand Management
+    def num_cards_in_hand(self):
+        return len(self._hand)
+
+    def card_at(self, idx):
+        return self._hand[idx]
+
     def remove_from_hand(self, card):
         if not isinstance(card, Card):
             raise ValueError(f"Expected Card argument. Got: {card}")

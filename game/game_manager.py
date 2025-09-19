@@ -1,6 +1,6 @@
 from .game_state import GameState
 from .game_logic import GameLogic
-from .player_config import PlayerConfig
+from ..config.player_config import PlayerConfig
 from calebstone_engine.output import NoOutputHandler
 from calebstone_engine.tracking import SimulationRecord, GameRecordEmitter
 from typing import Optional
@@ -9,7 +9,7 @@ class GameManager:
     # consider accepting a random seed
     # might need some looking at for human player
     def __init__(self,
-                 p1_config: PlayerConfig, 
+                 p1_config: PlayerConfig,
                  p2_config: PlayerConfig,
                  log_file: Optional[str] = None,
                  seed: Optional[int] = None):
