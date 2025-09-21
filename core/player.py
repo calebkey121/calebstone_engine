@@ -113,8 +113,11 @@ class Player:
             self.draw_card()
 
     # Hand Management
-    def num_cards_in_hand(self):
+    def hand_size(self):
         return len(self._hand)
+    
+    def deck_size(self):
+        return self._deck.current_num_cards
 
     def card_at(self, idx):
         return self._hand[idx]

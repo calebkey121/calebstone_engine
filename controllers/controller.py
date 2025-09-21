@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from random import choice
+import numpy as np
 
 # lightweight parser for controller params like "heurb:w_face=8,doom_face_mult=3"
 def _parse_controller_params(spec: str):
@@ -99,15 +100,6 @@ class RandomController(Controller):
         return choice(possible_actions)
 
 
-HAND_SIZE = 10
-BOARD_SIZE = 7
-OBS_GLOBAL = 3
-OBS_CARD = 4
-OBS_ALLY = 4
-OBS_OPP = 3
-OBS_LEN = OBS_GLOBAL + OBS_CARD * HAND_SIZE + OBS_ALLY * BOARD_SIZE + OBS_OPP * BOARD_SIZE
-import numpy as np
-
 class ReinforcementLearningController(Controller):
     def __init__(self):
         self.type = "RL"
@@ -126,10 +118,12 @@ class RLInferenceController(Controller):
         # Lazy imports to avoid hard dep unless used
         import numpy as np
         from sb3_contrib.ppo_mask import MaskablePPO
-        from calebstone_rl.environment import (
-            OBS_LEN, HAND_SIZE, ARMY_SIZE, N_ACTIONS,
-            # we only rely on the encoding interface; if your env exposes helpers, import them
-        )
+        from calebstone_rl.environment import OBS_LEN, HAND_SIZE, ARMY_SIZE, encode_obs_from_state
+
+        # meh
+        self._encode = encode_obs_from_state
+        self._obs_len, self._hand_size, self._army_size = OBS_LEN, HAND_SIZE, ARMY_SIZE
+
         self.type = "RL-Infer"
         self._np = np
         self._MaskablePPO = MaskablePPO
@@ -143,52 +137,14 @@ class RLInferenceController(Controller):
     def _encode_play(hand_idx: int) -> int:
         return hand_idx  # PLAY_OFFSET = 0
 
-    @staticmethod
-    def _encode_attack(att_slot: int, tgt_slot: int) -> int:
-        return HAND_SIZE + (att_slot - 1) * (BOARD_SIZE + 1) + tgt_slot
+    def _encode_attack(self, att_slot: int, tgt_slot: int) -> int:
+        return self._hand_size + (att_slot - 1) * (self._army_size + 1) + tgt_slot
 
-    @staticmethod
-    def _end_turn_index() -> int:
-        return HAND_SIZE + BOARD_SIZE * (BOARD_SIZE + 1)
+    def _end_turn_index(self) -> int:
+        return self._hand_size + self._army_size * (self._army_size + 1)
 
     def _build_obs(self, gs) -> "np.ndarray":
-        obs = self._np.zeros(OBS_LEN, dtype=self._np.float32)
-        # globals
-        obs[0] = float(gs.current_player.hero.health)
-        obs[1] = float(getattr(gs.current_player, 'gold', 0))
-        obs[2] = float(gs.opponent_player.hero.health)
-        # hand
-        hand_n = gs.current_player.num_cards_in_hand()
-        o = 3
-        for i in range(HAND_SIZE):
-            if i < hand_n:
-                c = gs.current_player.card_at(i)
-                obs[o+0] = 1.0
-                obs[o+1] = float(getattr(c,'cost',0))
-                obs[o+2] = float(getattr(c,'attack_value', getattr(c,'attack',0)))
-                obs[o+3] = float(getattr(c,'health', getattr(c,'hp',0)))
-            o += 4
-        # my board
-        my_allies = list(gs.current_player.all_characters())[1:1+BOARD_SIZE]
-        for j in range(BOARD_SIZE):
-            if j < len(my_allies):
-                u = my_allies[j]
-                obs[o+0] = 1.0
-                obs[o+1] = float(getattr(u,'attack_value', getattr(u,'attack',0)))
-                obs[o+2] = float(getattr(u,'health', getattr(u,'hp',0)))
-                ready = getattr(u,'_ready', getattr(u,'ready', False))
-                obs[o+3] = 1.0 if bool(ready) else 0.0
-            o += 4
-        # opp board
-        opp_allies = list(gs.opponent_player.all_characters())[1:1+BOARD_SIZE]
-        for j in range(BOARD_SIZE):
-            if j < len(opp_allies):
-                u = opp_allies[j]
-                obs[o+0] = 1.0
-                obs[o+1] = float(getattr(u,'attack_value', getattr(u,'attack',0)))
-                obs[o+2] = float(getattr(u,'health', getattr(u,'hp',0)))
-            o += 3
-        return obs
+        return self._encode(gs)
 
     def _build_mask(self, gs) -> "np.ndarray":
         mask = self._np.zeros(self._end_turn_index()+1, dtype=bool)
@@ -198,12 +154,12 @@ class RLInferenceController(Controller):
             t = a.get('type')
             if t == 'play_card':
                 h = a.get('card_index', -1)
-                if 0 <= h < HAND_SIZE:
+                if 0 <= h < self._hand_size:
                     mask[self._encode_play(h)] = True
             elif t == 'attack':
                 att = a.get('attacker_index', a.get('attacker_index', 0))
                 tgt = a.get('target_index',   a.get('target_index', 0))
-                if 1 <= att <= BOARD_SIZE and 0 <= tgt <= BOARD_SIZE:
+                if 1 <= att <= self._army_size and 0 <= tgt <= self._army_size:
                     idx = self._encode_attack(att, tgt)
                     if 0 <= idx < mask.size:
                         mask[idx] = True
@@ -220,10 +176,10 @@ class RLInferenceController(Controller):
         # map back to engine action dict
         if aid == self._end_turn_index():
             return {"type": "end_turn"}
-        if aid < HAND_SIZE:
+        if aid < self._hand_size:
             return {"type": "play_card", "card_index": aid}
         # attack
-        aid -= HAND_SIZE
-        att = aid // (BOARD_SIZE + 1) + 1
-        tgt = aid % (BOARD_SIZE + 1)
+        aid -= self._hand_size
+        att = aid // (self._army_size + 1) + 1
+        tgt = aid % (self._army_size + 1)
         return {"type": "attack", "attacker_index": att, "target_index": tgt}

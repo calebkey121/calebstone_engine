@@ -2,9 +2,9 @@ from .card import Card
 from .character import Character
 
 class Ally(Card):
-    def __init__(self, orig=None, cost=None, name=None, attack_value=None, health=None, effect=None):
+    def __init__(self, orig=None, cost=None, name=None, attack_value=None, health=None, effect=None, id=None):
         if orig:
-            super().__init__(orig.cost, orig.name, orig.effect, orig.text)
+            super().__init__(orig.cost, orig.name, orig.effect, orig.text, orig.id)
             self._character = Character(
                 name=orig.name,
                 attack_value=orig.attack_value,
@@ -12,7 +12,7 @@ class Ally(Card):
                 max_health=orig.max_health
             )
         else:
-            super().__init__(cost, name, effect)
+            super().__init__(cost, name, effect, None, id)
             self._character = Character(name, attack_value, health)
         
         # For convenience, expose character's signals directly
