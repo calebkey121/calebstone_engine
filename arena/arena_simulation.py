@@ -4,15 +4,15 @@ from tqdm import tqdm
 from calebstone_engine.game.game_manager import GameManager
 from calebstone_engine.tracking import SimulationRecord
 from .scheduler import round_robin_pairs
-from .schemas import RoundRobinSpec
+from ..config.arena_config import ArenaConfig
 
 
 def seed_for(experiment_id: str, a_id: str, b_id: str, rep: int) -> int:
     # simple deterministic hash; swap ids changes seed
     return abs(hash((experiment_id, a_id, b_id, rep))) & 0xffffffff
 
-class RoundRobinArena:
-    def run(self, spec: RoundRobinSpec):
+class Arena:
+    def run(self, spec: ArenaConfig):
         logger = SimulationRecord()
         # Compute total number of games for tqdm progress bar
         pairs = list(round_robin_pairs(spec.players))
@@ -32,7 +32,7 @@ class RoundRobinArena:
                 # A starts
                 for rep in range(g_a_starts):
                     seed = seed_for(spec.experiment_id, a.player_id, b.player_id, rep)
-                    game = GameManager(a, b, seed=seed)
+                    game = GameManager(game_config=spec.game_config, p1_config=a, p2_config=b, seed=seed)
                     game.run_game()
                     logger.record(game.game_record)
                     pbar.update(1)
@@ -41,7 +41,7 @@ class RoundRobinArena:
                 if spec.mirror_first_player:
                     for rep in range(g_b_starts):
                         seed = seed_for(spec.experiment_id, b.player_id, a.player_id, rep)
-                        game = GameManager(b, a, seed=seed)
+                        game = GameManager(game_config=spec.game_config, p1_config=b, p2_config=a, seed=seed)
                         game.run_game()
                         logger.record(game.game_record)
                         pbar.update(1)

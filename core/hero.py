@@ -1,14 +1,14 @@
-from calebstone_engine.config import HERO_STARTING_HEALTH, HERO_MAX_HEALTH
 from .character import Character
+from calebstone_engine.config import GameConfig
 
 class Hero:
-    def __init__(self, hero_name):
+    def __init__(self, hero_name, game_config: GameConfig):
         self._name = hero_name
         self._character = Character(
             name=hero_name,
             attack_value=0,
-            health=HERO_STARTING_HEALTH,
-            max_health=HERO_MAX_HEALTH
+            health=game_config.hero_starting_health,
+            max_health=game_config.hero_max_health
         )
         self.signals = self._character.signals
     

@@ -20,7 +20,7 @@ class TerminalOutputHandler(OutputHandler):
             print(f"{current_player._name} played {card._name}")
         elif action['type'] == 'attack':
             attacker = current_player.all_characters()[action['attacker_index']]
-            target = game_state.opponent_player.all_characters()[action['target_index']]
+            target = game_state.opposing_player.all_characters()[action['target_index']]
             print(f"{current_player._name}'s {attacker._name} attacked {target._name}")
     
     def display_state(self, game_state):
@@ -91,7 +91,7 @@ class ActionHistoryFileHandler(OutputHandler):
             line = f"{p._name} played {card._name} (cost {card._cost})"
         elif action['type'] == 'attack':
             attacker = p.all_characters()[action['attacker_index']]
-            target = game_state.opponent_player.all_characters()[action['target_index']]
+            target = game_state.opposing_player.all_characters()[action['target_index']]
             line = f"{p._name}'s {attacker._name} attacked {target._name} ({attacker.attack_value}/{attacker.health} -> {target.attack_value}/{target.health})"
         elif action['type'] == 'end_turn':
             line = f"{p._name} ended their turn"
@@ -145,7 +145,7 @@ class JSONLGameLogHandler(OutputHandler):
             att_idx = action['attacker_index']
             tgt_idx = action['target_index']
             attacker = p.all_characters()[att_idx]
-            target = game_state.opponent_player.all_characters()[tgt_idx]
+            target = game_state.opposing_player.all_characters()[tgt_idx]
             evt.update({
                 "attacker": getattr(attacker, '_name', None),
                 "target": getattr(target, '_name', None),

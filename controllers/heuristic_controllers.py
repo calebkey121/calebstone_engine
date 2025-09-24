@@ -81,7 +81,7 @@ class HeuristicControllerB(Controller):
         attack_actions = [a for a in possible_actions if a["type"] == "attack"]
         if attack_actions:
             player_chars = game_state.current_player.all_characters()
-            opponent_chars = game_state.opponent_player.all_characters()
+            opponent_chars = game_state.opposing_player.all_characters()
 
             # --- Lethal using only face attacks ---
             hero_actions = [a for a in attack_actions if a["target_index"] == 0]

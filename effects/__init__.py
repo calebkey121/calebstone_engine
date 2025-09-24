@@ -1,10 +1,9 @@
-from .base import *
 from .combat import *
 from .resource import *
 from .utility import *
+from .timing import TimingWindow
 
 __all__ = [
-    'Effect',
     'TimingWindow',
     'GainGoldEffect',
     'StealGoldEffect',

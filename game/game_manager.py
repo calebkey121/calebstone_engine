@@ -1,29 +1,28 @@
 from .game_state import GameState
 from .game_logic import GameLogic
-from ..config.player_config import PlayerConfig
+from calebstone_engine.config import PlayerConfig, GameConfig
 from calebstone_engine.output import NoOutputHandler
 from calebstone_engine.tracking import SimulationRecord, GameRecordEmitter
+from calebstone_engine.controllers import Controller
 from typing import Optional
 
 class GameManager:
-    # consider accepting a random seed
-    # might need some looking at for human player
     def __init__(self,
-                 p1_config: PlayerConfig,
-                 p2_config: PlayerConfig,
+                 game_config: GameConfig = GameConfig(),
+                 p1_config: PlayerConfig = PlayerConfig(),
+                 p2_config: PlayerConfig = PlayerConfig(),
                  log_file: Optional[str] = None,
                  seed: Optional[int] = None):
         
-        self.game_state = GameState(
-            p1_hero=p1_config.hero,
-            p2_hero=p2_config.hero,
-            p1_deck=p1_config.build_deck(),
-            p2_deck=p2_config.build_deck()
-        )
         self.p1 = p1_config
         self.p2 = p2_config
-        self.p1_controller = p1_config.get_controller()
-        self.p2_controller = p2_config.get_controller()
+        self.p1_controller = Controller.create_controller(p1_config.controller)
+        self.p2_controller = Controller.create_controller(p2_config.controller)
+        self.game_state = GameState(
+            game_config=game_config,
+            p1_config=p1_config,
+            p2_config=p2_config,
+        )
         self.game_record = GameRecordEmitter(log_file=log_file)
         self.output_handler = NoOutputHandler() # ActionHistoryFileHandler("game_history.log")
         self.seed = seed
@@ -79,11 +78,11 @@ class GameManager:
         self.game_record = self.game_record.end_game(self.game_state, p1_id=self.p1.player_id, p2_id=self.p2.player_id, seed=self.seed)
 
     @staticmethod
-    def run_simulation(p1_config: PlayerConfig, p2_config: PlayerConfig, num_games: int = 1000, log_file: str = "simulation_results.jsonl"):
+    def run_simulation(game_config: GameConfig, p1_config: PlayerConfig, p2_config: PlayerConfig, num_games: int = 1000, log_file: str = "simulation_results.jsonl"):
         """Run multiple games with random controllers"""
         logger = SimulationRecord()
         for _ in range(num_games):
-            game = GameManager(p1_config, p2_config)
+            game = GameManager(game_config, p1_config, p2_config)
             game.run_game()
             logger.record(game.game_record)
         return logger

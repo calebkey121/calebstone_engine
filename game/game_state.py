@@ -1,6 +1,8 @@
-from calebstone_engine.core import Player
+from calebstone_engine.core.player import Player
+from calebstone_engine.config import GameConfig, PlayerConfig
 from .game_logic import GameLogic
 from enum import Enum, auto
+from calebstone_engine.cards.decklists import create_deck
 
 class GameResult(Enum):
     IN_PROGRESS = auto()
@@ -9,22 +11,14 @@ class GameResult(Enum):
     P2_WIN = auto()
 
 class GameState:
-    def __init__(self, p1_hero, p1_deck, p2_hero, p2_deck):
+    def __init__(self, game_config: GameConfig, p1_config: PlayerConfig, p2_config: PlayerConfig):
         # Create both players with all subscriber types
-        self.p1 = Player(
-            player_name="p1",
-            hero_name=p1_hero,
-            deck_list=p1_deck,
-        )
-        
-        self.p2 = Player(
-            player_name="p2",
-            hero_name=p2_hero,
-            deck_list=p2_deck,
-        )
+        self.game_config = game_config
+        self.p1 = Player(p1_config, game_config)
+        self.p2 = Player(p2_config, game_config)
 
         self.current_player = None
-        self.opponent_player = None
+        self.opposing_player = None
         self.current_round = 0
         self.who_went_first = None
         self.total_turns = 0 # how many total turns have been taken?
@@ -33,7 +27,7 @@ class GameState:
     
     def switch_turn(self):
         # Swap players
-        self.current_player, self.opponent_player = self.opponent_player, self.current_player
+        self.current_player, self.opposing_player = self.opposing_player, self.current_player
         
         # Increment turn counter
         self.total_turns += 1
@@ -61,7 +55,7 @@ class GameState:
     def possible_attacks(self):
         actions = []
         attackers = self.current_player.available_attackers()
-        targets = self.opponent_player.available_targets()
+        targets = self.opposing_player.available_targets()
         for attacker in attackers:
             for target in targets:
                 actions.append({
@@ -79,7 +73,6 @@ class GameState:
             })
         return actions
 
-
     def get_result(self) -> GameResult:
         if not GameLogic.is_game_over(self):
             return GameResult.IN_PROGRESS
@@ -90,11 +83,3 @@ class GameState:
             return GameResult.P2_WIN
         else:
             return GameResult.P1_WIN
-
-    def to_vector(self):
-        # Convert game state to vector (for ML or saving)
-        return [
-            self.p1.health, len(self.p1.hand), len(self.p1.army), 
-            self.p2.health, len(self.p2.hand), len(self.p2.army),
-            self.round_count, self.total_turns
-        ]

@@ -63,7 +63,7 @@ def run_scenario(test_case: GameTestCase,
     test_case.game_state.p1 = test_player1
     test_case.game_state.p2 = test_player2
     test_case.game_state.current_player = test_player1
-    test_case.game_state.opponent_player = test_player2
+    test_case.game_state.opposing_player = test_player2
     test_case.game_state.total_turns = 1
     test_case.game_state.current_round = 1
     

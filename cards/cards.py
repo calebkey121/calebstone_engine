@@ -1,8 +1,29 @@
-from calebstone_engine.core import Ally
+from calebstone_engine.core.ally import Ally
 from calebstone_engine.effects import *
+from enum import IntEnum
+
+class CardId(IntEnum):
+    SIEGE_ENGINEER = 0
+    ROYAL_FALCONER = 1
+    WANDERING_MINSTREL = 2
+    COURT_ALCHEMIST = 3
+    MERCENARY_CAPTAIN = 4
+    VILLAGE_BLACKSMITH = 5
+    JOUSTING_CHAMPION = 6
+    DIRE_WOLF = 7
+    CASTLE_WARD = 8
+    HIGHWAYMANS_AMBUSH = 9
+    BANDIT_OUTLAW = 10
+    UNDEAD_CREATURES = 11
+    HIGHLAND_SCOUT = 12
+    BOW_MARSHAL = 13
+    FOREST_GUARDIAN = 14
+    TITAN_OVERLORD = 15
+    # append new ones at the end
 
 # Modified existing cards with scaled up values
 SIEGE_ENGINEER = Ally(
+    id=CardId.SIEGE_ENGINEER,
     name="Siege Engineer",
     cost=5,
     attack_value=0,
@@ -14,6 +35,7 @@ SIEGE_ENGINEER = Ally(
 )
 
 ROYAL_FALCONER = Ally(
+    id=CardId.ROYAL_FALCONER,
     name="Royal Falconer",
     cost=10,
     attack_value=30,
@@ -25,6 +47,7 @@ ROYAL_FALCONER = Ally(
 )
 
 WANDERING_MINSTREL = Ally(
+    id=CardId.WANDERING_MINSTREL,
     name="Wandering Minstrel",
     cost=15,
     attack_value=25,
@@ -36,6 +59,7 @@ WANDERING_MINSTREL = Ally(
 )
 
 COURT_ALCHEMIST = Ally(
+    id=CardId.COURT_ALCHEMIST,
     name="Court Alchemist",
     cost=20,
     attack_value=75,
@@ -47,6 +71,7 @@ COURT_ALCHEMIST = Ally(
 )
 
 MERCENARY_CAPTAIN = Ally(
+    id=CardId.MERCENARY_CAPTAIN,
     name="Mercenary Captain",
     cost=25,
     attack_value=45,
@@ -58,6 +83,7 @@ MERCENARY_CAPTAIN = Ally(
 )
 
 VILLAGE_BLACKSMITH = Ally(
+    id=CardId.VILLAGE_BLACKSMITH,
     name="Village Blacksmith",
     cost=30,
     attack_value=20,
@@ -69,6 +95,7 @@ VILLAGE_BLACKSMITH = Ally(
 )
 
 JOUSTING_CHAMPION = Ally(
+    id=CardId.JOUSTING_CHAMPION,
     name="Jousting Champion",
     cost=35,
     attack_value=85,
@@ -80,6 +107,7 @@ JOUSTING_CHAMPION = Ally(
 )
 
 DIRE_WOLF = Ally(
+    id=CardId.DIRE_WOLF,
     name="Dire Wolf",
     cost=40,
     attack_value=125,
@@ -91,6 +119,7 @@ DIRE_WOLF = Ally(
 )
 
 CASTLE_WARD = Ally(
+    id=CardId.CASTLE_WARD,
     name="Castle Ward",
     cost=45,
     attack_value=65,
@@ -99,6 +128,7 @@ CASTLE_WARD = Ally(
 )
 
 HIGHWAYMANS_AMBUSH = Ally(
+    id=CardId.HIGHWAYMANS_AMBUSH,
     name="Highwayman's Ambush",
     cost=50,
     attack_value=55,
@@ -110,6 +140,7 @@ HIGHWAYMANS_AMBUSH = Ally(
 )
 
 BANDIT_OUTLAW = Ally(
+    id=CardId.BANDIT_OUTLAW,
     name="Bandit Outlaw",
     cost=55,
     attack_value=115,
@@ -121,6 +152,7 @@ BANDIT_OUTLAW = Ally(
 )
 
 UNDEAD_CREATURES = Ally(
+    id=CardId.UNDEAD_CREATURES,
     name="Undead Creatures",
     cost=60,
     attack_value=150,
@@ -132,6 +164,7 @@ UNDEAD_CREATURES = Ally(
 )
 
 HIGHLAND_SCOUT = Ally(
+    id=CardId.HIGHLAND_SCOUT,
     name="Highland Scout",
     cost=65,
     attack_value=200,
@@ -143,6 +176,7 @@ HIGHLAND_SCOUT = Ally(
 )
 
 BOW_MARSHAL = Ally(
+    id=CardId.BOW_MARSHAL,
     name="Bow Marshal",
     cost=70,
     attack_value=175,
@@ -154,6 +188,7 @@ BOW_MARSHAL = Ally(
 )
 
 FOREST_GUARDIAN = Ally(
+    id=CardId.FOREST_GUARDIAN,
     name="Forest Guardian",
     cost=75,
     attack_value=75,
@@ -166,6 +201,7 @@ FOREST_GUARDIAN = Ally(
 
 # New epic-scale card
 TITAN_OVERLORD = Ally(
+    id=CardId.TITAN_OVERLORD,
     name="Titan Overlord",
     cost=80,
     attack_value=250,

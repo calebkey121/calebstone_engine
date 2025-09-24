@@ -12,7 +12,7 @@ class GameLogic():
     def process_turn(game_state, action):
         # Here the action is validated and applied to the game state
         current_player = game_state.current_player
-        opponent = game_state.opponent_player
+        opponent = game_state.opposing_player
         
         # Resolve action depending on its type
         if action['type'] == 'play_card':
@@ -44,31 +44,31 @@ class GameLogic():
 
     @staticmethod
     def start_game(game_state): # maybe return false / true instead of erroring?
-        if game_state.total_turns != 0 or game_state.current_player or game_state.opponent_player:
+        if game_state.total_turns != 0 or game_state.current_player or game_state.opposing_player:
             return False # raise ValueError("Tried starting the game on non turn zero")
         
         # commented to make player 1 always go first, consider making this an environment var for testing
         if random.choice([True, False]): # Coin Flip
 
             game_state.current_player = game_state.p1
-            game_state.opponent_player = game_state.p2
+            game_state.opposing_player = game_state.p2
         else:
             game_state.current_player = game_state.p2
-            game_state.opponent_player = game_state.p1
+            game_state.opposing_player = game_state.p1
         
         first_player = game_state.current_player
         game_state.who_went_first = first_player
-        second_player = game_state.opponent_player
+        second_player = game_state.opposing_player
         
         # Give each player starting gold/income
-        first_player.gold = GAME_START['FIRST_PLAYER']['GOLD']
-        second_player.gold = GAME_START['SECOND_PLAYER']['GOLD']
-        first_player.income = GAME_START['FIRST_PLAYER']['INCOME']
-        second_player.income = GAME_START['SECOND_PLAYER']['INCOME']
+        first_player.gold = game_state.game_config.game_start['FIRST_PLAYER']['GOLD']
+        second_player.gold = game_state.game_config.game_start['SECOND_PLAYER']['GOLD']
+        first_player.income = game_state.game_config.game_start['FIRST_PLAYER']['INCOME']
+        second_player.income = game_state.game_config.game_start['SECOND_PLAYER']['INCOME']
 
         # Let each player draw cards
-        first_player.draw_cards(GAME_START['FIRST_PLAYER']['CARDS_DRAWN'])
-        second_player.draw_cards(GAME_START['SECOND_PLAYER']['CARDS_DRAWN'])
+        first_player.draw_cards(game_state.game_config.game_start['FIRST_PLAYER']['CARDS_DRAWN'])
+        second_player.draw_cards(game_state.game_config.game_start['SECOND_PLAYER']['CARDS_DRAWN'])
 
         game_state.total_turns += 1
         return True
@@ -81,8 +81,8 @@ class GameLogic():
             if (ally._effect and 
                 ally._effect.timing == TimingWindow.END_OF_TURN):
                 ally._effect.execute(game_state, ally)
-        if (game_state.current_round % X_ROUNDS) == 0:
-            player.income += INCOME_PER_X_ROUNDS
+        if (game_state.current_round % game_state.game_config.x_rounds) == 0:
+            player.income += game_state.game_config.income_per_x_rounds
         game_state.switch_turn()
     
     @staticmethod

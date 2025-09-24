@@ -1,9 +1,8 @@
 from .character import Character  # Base class for Hero/Ally
-from calebstone_engine.config import ARMY_MAX_SIZE
 
 class Army:
-    def __init__(self, hero):
-        self._max_size = ARMY_MAX_SIZE
+    def __init__(self, hero, army_max_size):
+        self._max_size = army_max_size
         self._army = [hero]  # Hero is always first position
     
     def __repr__(self):

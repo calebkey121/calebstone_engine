@@ -1,8 +1,8 @@
-from calebstone_engine.effects import Effect
+from .effect import Effect
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from calebstone_engine.GameState import GameState
-    from calebstone_engine.Ally import Ally
+    from calebstone_engine.game.game_state import GameState
+    from calebstone_engine.core import Ally
 
 class GainGoldEffect(Effect):
     @property
@@ -21,8 +21,8 @@ class StealGoldEffect(Effect):
 
     def execute(self, game_state: 'GameState', source: 'Ally') -> 'GameState':
         current_player = game_state.current_player
-        actual_amount = min(self.amount[0], game_state.opponent_player.gold)
-        game_state.opponent_player.gold -= actual_amount
+        actual_amount = min(self.amount[0], game_state.opposing_player.gold)
+        game_state.opposing_player.gold -= actual_amount
         game_state.current_player.gold += actual_amount
         return game_state
 
@@ -33,8 +33,8 @@ class StealIncomeEffect(Effect):
     
     def execute(self, game_state: 'GameState', source: 'Ally') -> 'GameState':
         current_player = game_state.current_player
-        actual_amount = min(self.amount[0], game_state.opponent_player.income)
-        game_state.opponent_player.income -= actual_amount
+        actual_amount = min(self.amount[0], game_state.opposing_player.income)
+        game_state.opposing_player.income -= actual_amount
         game_state.current_player.income += actual_amount
         return game_state
 

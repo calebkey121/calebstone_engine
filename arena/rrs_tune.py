@@ -2,9 +2,8 @@ import random, time, json
 from sklearn.model_selection import ParameterSampler
 from scipy.stats import uniform
 from math import sqrt
-from calebstone_engine.arena.arena_simulation import RoundRobinArena
-from calebstone_engine.arena.schemas import RoundRobinSpec
-from calebstone_engine.config.player_config import PlayerConfig
+from .arena_simulation import Arena
+from calebstone_engine.config import ArenaConfig, PlayerConfig, GameConfig
 from calebstone_engine.controllers.heuristic_controllers import HeuristicControllerB
 
 # ---- sampling space ----
@@ -53,15 +52,16 @@ def eval_candidate(params, games_per_pair, base_seed, experiment_tag, objective)
     for opp in OPPONENTS:
         players.append(PlayerConfig(player_id=opp["id"], controller=opp["controller"], hero="Caleb", deck="standard"))
 
-    spec = RoundRobinSpec(
+    spec = ArenaConfig(
         experiment_id=f"{experiment_tag}-{int(time.time())}",
+        game_config=GameConfig(deck_start_size=45),
         players=players,
         games_per_pair=games_per_pair,
         mirror_first_player=True,
         base_seed=base_seed,
         log_file=None,
     )
-    logger = RoundRobinArena().run(spec)
+    logger = Arena().run(spec)
     pairs = logger._pairs
 
     # Win rates for candidate vs each opponent

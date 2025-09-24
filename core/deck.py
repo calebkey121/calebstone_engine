@@ -1,11 +1,17 @@
-from typing import List
+from typing import List, TYPE_CHECKING
+from calebstone_engine.cards.decklists import create_deck
 import random
-from calebstone_engine.config import DECK_STARTING_NUM_CARDS
+if TYPE_CHECKING:
+    from card import Card
 
 class Deck:
-    def __init__(self, deck_list: List):
+    def __init__(self, deck_list, deck_start_size: int):
+        deck_list = create_deck(deck_list)
+        if len(deck_list) != deck_start_size:
+            raise RuntimeError(f"GameConfig.deck_start_size = {deck_start_size}, was given deck_list of size {len(deck_list)}")
+
         self._deck_list = deck_list
-        self._starting_num_cards = DECK_STARTING_NUM_CARDS
+        self._deck_start_size = deck_start_size
         self._fatigue_counter = 0
         self._is_shuffled = False
         self.set_num_cards()

@@ -34,7 +34,7 @@ class CombatTest(GameTestCase):
         self.game_state.p1 = test_player1
         self.game_state.p2 = test_player2
         self.game_state.current_player = test_player1
-        self.game_state.opponent_player = test_player2
+        self.game_state.opposing_player = test_player2
         
         # Execute attacks
         attacks = [

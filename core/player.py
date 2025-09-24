@@ -1,11 +1,12 @@
 from .army import Army
 from .deck import Deck
-from .card import Card
-from .ally import Ally
 from .hero import Hero
 from .signal import *
-from calebstone_engine.config import *
+from calebstone_engine.config import GameConfig, PlayerConfig
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .card import Card
 
 @dataclass
 class PlayerSignals:
@@ -18,13 +19,14 @@ class PlayerSignals:
    on_income_lost: Signal = field(default_factory=Signal)
 
 class Player:
-    def __init__(self, player_name, hero_name, deck_list):
+    def __init__(self, player_config: PlayerConfig, game_config: GameConfig):
+        hero = Hero(player_config.hero, game_config)
         # Initialize core components
-        self._name = player_name
-        self._deck = Deck(deck_list)
-        self._army = Army(Hero(hero_name))
+        self._config = player_config
+        self._deck = Deck(deck_list=player_config.deck, deck_start_size=game_config.deck_start_size)
+        self._army = Army(hero=hero, army_max_size=game_config.army_max_size)
         self._hand = []
-        self._max_hand_size = PLAYER_MAX_HAND_SIZE
+        self._max_hand_size = game_config.player_max_hand_size# PLAYER_MAX_HAND_SIZE
         self._gold = 0
         self._income = 0
         # have self.hero, just points to Army
@@ -38,7 +40,7 @@ class Player:
         }
 
     def __repr__(self):
-        return self._name
+        return self._config.player_id
 
     @property
     def hero(self):
@@ -123,8 +125,6 @@ class Player:
         return self._hand[idx]
 
     def remove_from_hand(self, card):
-        if not isinstance(card, Card):
-            raise ValueError(f"Expected Card argument. Got: {card}")
         try:
             self._hand.remove(card)
         except ValueError:

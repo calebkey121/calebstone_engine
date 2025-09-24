@@ -45,7 +45,7 @@ class DrawEffectsTest(GameTestCase):
         # Setup game state
         self.game_state.p1 = test_player1
         self.game_state.p2 = test_player2
-        self.game_state.current_player, self.game_state.opponent_player = test_player1, test_player2
+        self.game_state.current_player, self.game_state.opposing_player = test_player1, test_player2
         
         # Play the card drawer
         GameLogic.process_turn(self.game_state, {

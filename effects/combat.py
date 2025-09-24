@@ -1,8 +1,8 @@
-from calebstone_engine.effects import Effect
+from .effect import Effect
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from calebstone_engine.GameState import GameState
-    from calebstone_engine.Ally import Ally
+    from calebstone_engine.game.game_state import GameState
+    from calebstone_engine.core import Ally
 
 class HealAllAlliesEffect(Effect):
     @property
@@ -21,7 +21,7 @@ class DamageEnemyHeroEffect(Effect):
         return f"Deal {self.amount[0]} damage to the enemy hero"
 
     def execute(self, game_state: 'GameState', source: 'Ally') -> 'GameState':
-        opponent = game_state.opponent_player
+        opponent = game_state.opposing_player
         opponent.damage_hero(self.amount[0])
         return game_state
 
@@ -31,7 +31,7 @@ class DamageAllEnemiesEffect(Effect):
         return f"Deal {self.amount[0]} damage to all enemies"
 
     def execute(self, game_state: 'GameState', source: 'Ally') -> 'GameState':
-        opponent = game_state.opponent_player
+        opponent = game_state.opposing_player
         for character in opponent.army.get_all():
             character.damage(source=source, amount=self.amount[0])
         return game_state
