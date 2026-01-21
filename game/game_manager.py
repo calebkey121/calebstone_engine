@@ -5,6 +5,7 @@ from calebstone_engine.output import NoOutputHandler
 from calebstone_engine.tracking import SimulationRecord, GameRecordEmitter
 from calebstone_engine.controllers import Controller
 from typing import Optional
+import random, secrets
 
 class GameManager:
     def __init__(self,
@@ -13,7 +14,9 @@ class GameManager:
                  p2_config: PlayerConfig = PlayerConfig(),
                  log_file: Optional[str] = None,
                  seed: Optional[int] = None):
-        
+
+        self.seed = int(seed) if seed is not None else secrets.randbits(32)
+        self.rng = random.Random(self.seed)
         self.p1 = p1_config
         self.p2 = p2_config
         self.p1_controller = Controller.create_controller(p1_config.controller)
@@ -22,20 +25,15 @@ class GameManager:
             game_config=game_config,
             p1_config=p1_config,
             p2_config=p2_config,
+            rng=self.rng,
         )
         self.game_record = GameRecordEmitter(log_file=log_file)
         self.output_handler = NoOutputHandler() # ActionHistoryFileHandler("game_history.log")
-        self.seed = seed
         
         self.start_game()
     
     def start_game(self):
         """Initialize game state"""
-        # Optional determinism for shuffles/coin flips
-        if self.seed is not None:
-            import random
-            random.seed(self.seed)
-
         GameLogic.start_game(self.game_state)
         self.game_record.start_game(self.game_state)
 
@@ -86,3 +84,9 @@ class GameManager:
             game.run_game()
             logger.record(game.game_record)
         return logger
+    
+def main():
+    a = GameManager()
+
+if __name__ == "__main__":
+    main()

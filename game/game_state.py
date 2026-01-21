@@ -11,12 +11,12 @@ class GameResult(Enum):
     P2_WIN = auto()
 
 class GameState:
-    def __init__(self, game_config: GameConfig, p1_config: PlayerConfig, p2_config: PlayerConfig):
+    def __init__(self, game_config: GameConfig, p1_config: PlayerConfig, p2_config: PlayerConfig, rng):
         # Create both players with all subscriber types
+        self.rng = rng
         self.game_config = game_config
-        self.p1 = Player(p1_config, game_config)
-        self.p2 = Player(p2_config, game_config)
-
+        self.p1 = Player(p1_config, game_config, rng=self.rng)
+        self.p2 = Player(p2_config, game_config, rng=self.rng)
         self.current_player = None
         self.opposing_player = None
         self.current_round = 0

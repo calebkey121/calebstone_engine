@@ -19,15 +19,23 @@ RANGES = {
 
 # ---- tuning constants ----
 BASE_SEED = 12345
-SAMPLES = 10000
-KEEP1 = 1000
-KEEP2 = 100
+SAMPLES = 1000
+KEEP1 = 100
+KEEP2 = 20
 G1 = 200      # games_per_pair stage 1
 G2 = 400     # games_per_pair stage 2
 G3 = 1000    # games_per_pair stage 3
 OBJECTIVE = "mean"  # "mean" or "min"
 OUT_PATH = "tune_results.jsonl"
 ROUND_DECIMALS = 3
+
+with open('calebstone_league/exports/elite_bundle.json', 'r') as file:
+    data = json.load(file)
+
+elite_decks = [ (name, deck) for name, deck in data.items() ]
+decks = []#[('standard', 'standard')]
+decks.extend(elite_decks)
+deck = decks[0][1]
 
 # ---- opponents to optimize against ----
 OPPONENTS = [
@@ -47,14 +55,14 @@ def eval_candidate(params, games_per_pair, base_seed, experiment_tag, objective)
 
     # Build players: candidate + opponents
     players = [
-        PlayerConfig(player_id=CAND_ID, controller=HeuristicControllerB.heurb_spec(params), hero="Caleb", deck="standard"),
+        PlayerConfig(player_id=CAND_ID, controller=HeuristicControllerB.heurb_spec(params), hero="Caleb", deck=deck),
     ]
     for opp in OPPONENTS:
-        players.append(PlayerConfig(player_id=opp["id"], controller=opp["controller"], hero="Caleb", deck="standard"))
+        players.append(PlayerConfig(player_id=opp["id"], controller=opp["controller"], hero="Caleb", deck=deck))
 
     spec = ArenaConfig(
         experiment_id=f"{experiment_tag}-{int(time.time())}",
-        game_config=GameConfig(deck_start_size=45),
+        game_config=GameConfig(deck_start_size=40),
         players=players,
         games_per_pair=games_per_pair,
         mirror_first_player=True,

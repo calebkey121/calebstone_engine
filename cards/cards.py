@@ -199,7 +199,6 @@ FOREST_GUARDIAN = Ally(
     )
 )
 
-# New epic-scale card
 TITAN_OVERLORD = Ally(
     id=CardId.TITAN_OVERLORD,
     name="Titan Overlord",

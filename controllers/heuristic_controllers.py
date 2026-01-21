@@ -1,5 +1,4 @@
 from .controller import Controller
-from random import choice
 from itertools import combinations
 
 class HeuristicControllerA(Controller):
@@ -24,7 +23,7 @@ class HeuristicControllerA(Controller):
 
             return min(attack_actions, key=attacker_strength)
         
-        return choice(possible_actions)
+        return game_state.rng.choice(possible_actions)
 
 class HeuristicControllerB(Controller):
     def __init__(
@@ -143,7 +142,7 @@ class HeuristicControllerB(Controller):
 
             return max(attack_actions, key=score_action)
         
-        return choice(possible_actions)
+        return game_state.rng.choice(possible_actions)
     
     @staticmethod
     def heurb_spec(params: dict) -> str:

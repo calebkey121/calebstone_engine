@@ -19,11 +19,12 @@ class PlayerSignals:
    on_income_lost: Signal = field(default_factory=Signal)
 
 class Player:
-    def __init__(self, player_config: PlayerConfig, game_config: GameConfig):
+    def __init__(self, player_config: PlayerConfig, game_config: GameConfig, rng):
+        self.rng = rng
         hero = Hero(player_config.hero, game_config)
         # Initialize core components
         self._config = player_config
-        self._deck = Deck(deck_list=player_config.deck, deck_start_size=game_config.deck_start_size)
+        self._deck = Deck(deck_list=player_config.deck, deck_start_size=game_config.deck_start_size, rng=self.rng)
         self._army = Army(hero=hero, army_max_size=game_config.army_max_size)
         self._hand = []
         self._max_hand_size = game_config.player_max_hand_size# PLAYER_MAX_HAND_SIZE

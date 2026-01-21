@@ -11,5 +11,5 @@ class ArenaConfig:
     players: List['PlayerConfig']
     games_per_pair: int = 100 # total across both directions
     mirror_first_player: bool = True
-    base_seed: Optional[int] = 12345
+    base_seed: Optional[int] = None
     log_file: str = "arena.jsonl"

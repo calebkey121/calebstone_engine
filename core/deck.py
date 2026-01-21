@@ -1,11 +1,8 @@
-from typing import List, TYPE_CHECKING
 from calebstone_engine.cards.decklists import create_deck
-import random
-if TYPE_CHECKING:
-    from card import Card
 
 class Deck:
-    def __init__(self, deck_list, deck_start_size: int):
+    def __init__(self, deck_list, deck_start_size: int, rng):
+        self.rng = rng
         deck_list = create_deck(deck_list)
         if len(deck_list) != deck_start_size:
             raise RuntimeError(f"GameConfig.deck_start_size = {deck_start_size}, was given deck_list of size {len(deck_list)}")
@@ -40,7 +37,7 @@ class Deck:
     def shuffle(self):
         """Shuffles deck if not already shuffled"""
         if not self._is_shuffled:
-            random.shuffle(self._deck_list)
+            self.rng.shuffle(self._deck_list)
             self._is_shuffled = True
 
     def draw_card(self):

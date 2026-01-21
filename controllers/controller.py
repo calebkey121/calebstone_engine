@@ -97,7 +97,7 @@ class RandomController(Controller):
 
     def get_action(self, game_state):
         possible_actions = game_state.possible_actions()
-        return choice(possible_actions)
+        return game_state.rng.choice(possible_actions)
 
 
 class ReinforcementLearningController(Controller):

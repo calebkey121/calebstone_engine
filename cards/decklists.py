@@ -12,11 +12,11 @@ class DeckType(Enum):
 # Collection of all deck compositions
 DECK_COMPOSITIONS = {
     DeckType.STANDARD: {
-        "SIEGE_ENGINEER": 3,
-        "ROYAL_FALCONER": 3,
-        "WANDERING_MINSTREL": 3,
-        "COURT_ALCHEMIST": 3,
-        "MERCENARY_CAPTAIN": 3,
+        "SIEGE_ENGINEER": 2,
+        "ROYAL_FALCONER": 2,
+        "WANDERING_MINSTREL": 2,
+        "COURT_ALCHEMIST": 2,
+        "MERCENARY_CAPTAIN": 2,
         "VILLAGE_BLACKSMITH": 3,
         "JOUSTING_CHAMPION": 3,
         "DIRE_WOLF": 3,

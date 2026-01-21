@@ -1,13 +1,7 @@
-import random
-from calebstone_engine.config import *
 from calebstone_engine.effects import TimingWindow
 
 
 class GameLogic():
-    # def __init__(self):
-    #     # Initialize game-wide signals
-    #     self.signals = GameSignals()
-    
     @staticmethod
     def process_turn(game_state, action):
         # Here the action is validated and applied to the game state
@@ -48,7 +42,7 @@ class GameLogic():
             return False # raise ValueError("Tried starting the game on non turn zero")
         
         # commented to make player 1 always go first, consider making this an environment var for testing
-        if random.choice([True, False]): # Coin Flip
+        if game_state.rng.choice([True, False]): # Coin Flip
 
             game_state.current_player = game_state.p1
             game_state.opposing_player = game_state.p2
