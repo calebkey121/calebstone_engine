@@ -26,7 +26,7 @@ class GameConfig:
     player_max_income: int = 75
 
     # Deck settings
-    deck_start_size: int = 40
+    deck_start_size: int = 45
 
     # Army settings
     army_max_size: int = 7
