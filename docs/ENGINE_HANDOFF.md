@@ -31,7 +31,7 @@ This document gives a high-level map of `calebstone_engine/` for a human reader 
 
 Notes:
 - Army index `0` is hero; allies are `1..N`.
-- `GameState.possible_actions()` currently returns `end_turn` **only when no other actions exist**.
+- `GameState.possible_actions()` now always includes `end_turn`.
 
 ## Turn Lifecycle
 1. `GameManager.start_game()` calls `GameLogic.start_game()`.
@@ -75,32 +75,17 @@ Notes:
    - Files: `calebstone_server/app/controllers/game_controller.py`, `docs/api_v1.md`
 
 ## TODOs
-1. Please implement a first-class synchronous action API on GameManager:
+1. [x] Add first-class synchronous action submission on `GameManager` for server use (`submit_action_and_wait` with queued apply, 422 illegal, 504 timeout).
 
-   - Add method:
-     submit_action_and_wait(self, action: dict, timeout: float | None = None) -> bool | dict
+2. [x] Add thread-safe `GameManager.get_legal_actions()` that returns current-player legal actions in engine/index format and returns `[]` when game is over; keep legality source aligned with submit validation.
 
-   Behavior required by server:
-   1) Accept one engine-format action dict (play_card with indices, attack with indices, end_turn).
-   2) Queue/submit it to the game loop safely.
-   3) Block until that exact action is actually applied to game_state (or timeout).
-   4) Return:
-      - True (or {"applied": true}) on success
-      - False or {"applied": false, "status": 422, "error": "..."} when action is rejected/illegal
-      - {"applied": false, "status": 504, "error": "..."} on timeout
-   5) Must be thread-safe for one API thread submitting while game loop runs.
-   6) Keep existing game behavior unchanged besides adding this API.
-
-   Context: server now calls GameManager.submit_action_and_wait(action, timeout) and then serializes game_state immediately after success.
-
-2. Fix delayed effect subscription plumbing in `GameLogic.subscribe_ally_effect` to use `card.signals` and validate each timing window mapping.
-3. Add a `Player.damage_hero(...)` path or refactor `DamageEnemyHeroEffect` to target `opposing_player.hero` directly.
-4. Remove top-level non-essential imports from `controllers/controller.py` (make RL-only deps lazy).
-5. Repair `controllers/__init__.py` exports to match actual class names.
-6. Update or remove stale `TerminalOutputHandler` paths to align with current `Player` API.
-7. Modernize engine tests against current module paths and signatures; add coverage for:
+3. Fix delayed effect subscription plumbing in `GameLogic.subscribe_ally_effect` to use `card.signals` and validate each timing window mapping.
+4. Add a `Player.damage_hero(...)` path or refactor `DamageEnemyHeroEffect` to target `opposing_player.hero` directly.
+5. Remove top-level non-essential imports from `controllers/controller.py` (make RL-only deps lazy).
+6. Repair `controllers/__init__.py` exports to match actual class names.
+7. Update or remove stale `TerminalOutputHandler` paths to align with current `Player` API.
+8. Modernize engine tests against current module paths and signatures; add coverage for:
    - delayed trigger effects (`ON_DEATH`, `ON_ATTACK`, `ON_DAMAGE_DEALT`, `ON_HEAL`)
    - synchronous action submission behavior (success, illegal, timeout)
    - thread safety around API action submission
-8. Optional cleanup: decide whether to allow voluntary `end_turn` even when other actions exist; document final rule clearly.
-
+9. Optional cleanup: decide whether to allow voluntary `end_turn` even when other actions exist; document final rule clearly.

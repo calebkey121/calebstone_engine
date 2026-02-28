@@ -32,6 +32,9 @@ class GameManager:
         self.game_record = GameRecordEmitter(log_file=log_file)
         self.output_handler = NoOutputHandler() # ActionHistoryFileHandler("game_history.log")
 
+        # Protect game_state reads/writes so concurrent server reads do not observe partial updates.
+        self._state_lock = threading.RLock()
+
         # Synchronous external action submission state.
         # One API thread can submit while run_game/process_turn executes on another thread.
         self._submission_cv = threading.Condition()
@@ -93,18 +96,33 @@ class GameManager:
                 pending["error"] = error
                 self._submission_cv.notify_all()
 
+    def _legal_actions_unlocked(self):
+        if GameLogic.is_game_over(self.game_state):
+            return []
+        return self.game_state.possible_actions()
+
+    def get_legal_actions(self) -> list[dict]:
+        """
+        Thread-safe legal-action view for the current player, in engine/index format.
+        Returns [] when the game is over.
+        """
+        with self._state_lock:
+            # return copies so callers cannot mutate internal action objects
+            return [dict(action) for action in self._legal_actions_unlocked()]
+
     def _apply_action(self, action):
-        self.output_handler.display_action(action, self.game_state)
-        GameLogic.process_turn(self.game_state, action)
-        
-        is_turn_complete = (GameLogic.is_game_over(self.game_state) or 
-                          action["type"] == "end_turn")
-        
-        if is_turn_complete and not GameLogic.is_game_over(self.game_state):
-            GameLogic.start_turn(self.game_state)
-            self.output_handler.display_state(self.game_state)
+        with self._state_lock:
+            self.output_handler.display_action(action, self.game_state)
+            GameLogic.process_turn(self.game_state, action)
             
-        return is_turn_complete
+            is_turn_complete = (GameLogic.is_game_over(self.game_state) or 
+                              action["type"] == "end_turn")
+            
+            if is_turn_complete and not GameLogic.is_game_over(self.game_state):
+                GameLogic.start_turn(self.game_state)
+                self.output_handler.display_state(self.game_state)
+                
+            return is_turn_complete
 
     def submit_action_and_wait(self, action: dict, timeout: float | None = None) -> bool | dict:
         """
@@ -124,10 +142,12 @@ class GameManager:
             timeout = max(0.0, float(timeout))
             deadline = time.monotonic() + timeout
 
-        with self._submission_cv:
-            if GameLogic.is_game_over(self.game_state):
-                return {"applied": False, "status": 422, "error": "game is over"}
+        with self._state_lock:
+            is_over = GameLogic.is_game_over(self.game_state)
+        if is_over:
+            return {"applied": False, "status": 422, "error": "game is over"}
 
+        with self._submission_cv:
             # One in-flight external action at a time.
             while self._pending_submission is not None:
                 remaining = None if deadline is None else (deadline - time.monotonic())
@@ -168,20 +188,23 @@ class GameManager:
     
     def start_game(self):
         """Initialize game state"""
-        GameLogic.start_game(self.game_state)
-        self.game_record.start_game(self.game_state)
+        with self._state_lock:
+            GameLogic.start_game(self.game_state)
+            self.game_record.start_game(self.game_state)
 
-        # Write a header to the selected output handler
-        if hasattr(self.output_handler, 'display_header'):
-            self.output_handler.display_header(self.game_state, seed=self.seed)
+            # Write a header to the selected output handler
+            if hasattr(self.output_handler, 'display_header'):
+                self.output_handler.display_header(self.game_state, seed=self.seed)
 
-        # Begin the first turn and record the turn-start state
-        GameLogic.start_turn(self.game_state)
-        self.output_handler.display_state(self.game_state)
+            # Begin the first turn and record the turn-start state
+            GameLogic.start_turn(self.game_state)
+            self.output_handler.display_state(self.game_state)
     
     def process_turn(self):
         """Process actions until turn is complete"""
-        if GameLogic.is_game_over(self.game_state):
+        with self._state_lock:
+            is_over = GameLogic.is_game_over(self.game_state)
+        if is_over:
             self._reject_queued_submission_if_any("game is over")
             return True
 
@@ -192,7 +215,8 @@ class GameManager:
         pending_submission = self._take_pending_submission()
         if pending_submission is not None:
             action = pending_submission["action"]
-            if action not in self.game_state.possible_actions():
+            legal_actions = self.get_legal_actions()
+            if action not in legal_actions:
                 self._complete_submission(
                     pending_submission,
                     "rejected",
