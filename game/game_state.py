@@ -67,10 +67,10 @@ class GameState:
 
     def possible_actions(self):
         actions = self.possible_cards_to_play() + self.possible_attacks()
-        if not actions:
-            actions.append({
-                "type": "end_turn"
-            })
+        # End turn is always a legal action.
+        actions.append({
+            "type": "end_turn"
+        })
         return actions
 
     def get_result(self) -> GameResult:
