@@ -33,11 +33,14 @@ class Character:
         
     @health.setter
     def health(self, new_amount):
-        if new_amount <= 0:
-            if self._health > 0:  # Only die once
-                self.die()
+        was_alive = self._health > 0
         new_amount = min(new_amount, self._max_health)
         self._health = new_amount
+
+        # Emit death only on an alive -> dead transition, after health is committed.
+        # This ensures on_death subscribers (like remove_dead_allies) see <= 0 health.
+        if new_amount <= 0 and was_alive:
+            self.die()
     
     def ready_up(self):
         if self._attack_value > 0:

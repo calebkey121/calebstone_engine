@@ -78,6 +78,15 @@ class Player:
     def army(self):
         return self._army
 
+    def damage_hero(self, amount, source=None):
+        """
+        Deal damage to this player's hero.
+        If no explicit source is provided, use this hero as a fallback source.
+        """
+        if source is None:
+            source = self.hero
+        self.hero.damage(source=source, amount=amount)
+
     # Core Game Actions
     def play_ally(self, card):
         if self.army.is_full() or card.cost > self.gold:

@@ -22,7 +22,7 @@ class DamageEnemyHeroEffect(Effect):
 
     def execute(self, game_state: 'GameState', source: 'Ally') -> 'GameState':
         opponent = game_state.opposing_player
-        opponent.damage_hero(self.amount[0])
+        opponent.damage_hero(amount=self.amount[0], source=source)
         return game_state
 
 class DamageAllEnemiesEffect(Effect):

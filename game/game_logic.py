@@ -122,6 +122,13 @@ class GameLogic():
         # Handle delayed effects
         if card._effect.timing in TIMING_TO_SIGNAL:
             signal_name = TIMING_TO_SIGNAL[card._effect.timing]
-            if hasattr(card, signal_name):
-                signal = getattr(card, signal_name)
-                signal.connect(lambda source: card._effect.execute(game_state, source))
+            if hasattr(card.signals, signal_name):
+                signal = getattr(card.signals, signal_name)
+                # Signal handlers receive event payloads (GameEventData subclasses).
+                # Effects expect the originating game object as `source`.
+                signal.connect(
+                    lambda evt: card._effect.execute(
+                        game_state,
+                        getattr(evt, "source", evt),
+                    )
+                )
