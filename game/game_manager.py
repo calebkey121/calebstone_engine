@@ -4,7 +4,7 @@ from calebstone_engine.config import PlayerConfig, GameConfig
 from calebstone_engine.output import NoOutputHandler
 from calebstone_engine.tracking import SimulationRecord, GameRecordEmitter
 from calebstone_engine.controllers import Controller
-from typing import Optional
+from typing import Callable, Optional
 import random, secrets
 import threading
 import time
@@ -15,7 +15,8 @@ class GameManager:
                  p1_config: PlayerConfig = PlayerConfig(),
                  p2_config: PlayerConfig = PlayerConfig(),
                  log_file: Optional[str] = None,
-                 seed: Optional[int] = None):
+                 seed: Optional[int] = None,
+                 turn_start_callback: Optional[Callable[[GameState], None]] = None):
 
         self.seed = int(seed) if seed is not None else secrets.randbits(32)
         self.rng = random.Random(self.seed)
@@ -31,6 +32,7 @@ class GameManager:
         )
         self.game_record = GameRecordEmitter(log_file=log_file)
         self.output_handler = NoOutputHandler() # ActionHistoryFileHandler("game_history.log")
+        self._turn_start_callback = turn_start_callback
 
         # Protect game_state reads/writes so concurrent server reads do not observe partial updates.
         self._state_lock = threading.RLock()
@@ -42,6 +44,11 @@ class GameManager:
         self._next_submission_id = 1
         
         self.start_game()
+
+    def _emit_turn_start(self):
+        """Invoke optional instrumentation after a turn-start state is fully prepared."""
+        if self._turn_start_callback is not None:
+            self._turn_start_callback(self.game_state)
 
     @staticmethod
     def _normalize_engine_action(action):
@@ -121,6 +128,7 @@ class GameManager:
             if is_turn_complete and not GameLogic.is_game_over(self.game_state):
                 GameLogic.start_turn(self.game_state)
                 self.output_handler.display_state(self.game_state)
+                self._emit_turn_start()
                 
             return is_turn_complete
 
@@ -199,6 +207,7 @@ class GameManager:
             # Begin the first turn and record the turn-start state
             GameLogic.start_turn(self.game_state)
             self.output_handler.display_state(self.game_state)
+            self._emit_turn_start()
     
     def process_turn(self):
         """Process actions until turn is complete"""
